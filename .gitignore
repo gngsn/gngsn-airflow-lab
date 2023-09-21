@@ -1,5 +1,6 @@
 myvenv/
 config/
-dags/
 logs/
 plugins/
+
+.idea/
