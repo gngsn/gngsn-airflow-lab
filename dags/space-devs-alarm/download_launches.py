@@ -24,7 +24,7 @@ download_launches = BashOperator(
 def _get_pictures():
     pathlib.Path("/tmp/images").mkdir(parents=True, exist_ok=True)
 
-    response = requests.get('https://httpbin.org/basic-auth/user/pass')
+    response = requests.get('https://ll.thespacedevs.com/2.0.0/launch/upcoming')
     print("response: ", response)
     launches = response.json()
 
