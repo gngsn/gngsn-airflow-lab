@@ -8,29 +8,12 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-dag = DAG(
-    dag_id="download_rocket_launches",  # Airflow UI 에 보여질 DAG 이름
-    start_date=airflow.utils.dates.days_ago(14),  # Workflow 가 처음 실행될 일시
-    schedule_interval=None,
-)
-
-download_launches = BashOperator(
-    task_id="download_launches",  # Task 이름
-    bash_command="curl -o /tmp/launches.json -L 'https://ll.thespacedevs.com/2.0.0/launch/upcoming'",
-    dag=dag,  # DAG 변수
-)
-
-
 def _get_pictures():
     pathlib.Path("/tmp/images").mkdir(parents=True, exist_ok=True)
 
-    response = requests.get('https://ll.thespacedevs.com/2.0.0/launch/upcoming')
-    print("response: ", response)
-    launches = response.json()
-
-    print("launches: ", launches)
-
+    launches = requests.get('https://ll.thespacedevs.com/2.0.0/launch/upcoming').json()
     image_urls = [launch["image"] for launch in launches["results"]]
+
     for image_url in image_urls:
         try:
             response = requests.get(image_url)
@@ -44,17 +27,24 @@ def _get_pictures():
         except requests_exceptions.ConnectionError:
             print(f"Could not connect to {image_url}.")
 
+dag = DAG(
+    dag_id="download_rocket_launches",  # Airflow UI 에 보여질 DAG 이름
+    start_date=airflow.utils.dates.days_ago(14),  # Workflow 가 처음 실행될 일시
+    schedule_interval=None,
+)
 
+# 1. PythonOperator: get_pictures
 get_pictures = PythonOperator(
     task_id="get_pictures",
     python_callable=_get_pictures,
     dag=dag,
 )
 
+# 2. BashOperator: notify
 notify = BashOperator(
     task_id="notify",
     bash_command='echo "There are now $(ls /tmp/images/ | wc -l) images."',
     dag=dag,
 )
 
-download_launches >> get_pictures >> notify
+get_pictures >> notify
