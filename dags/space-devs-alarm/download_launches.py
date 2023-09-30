@@ -1,4 +1,3 @@
-import json
 import pathlib
 
 import airflow
@@ -27,20 +26,21 @@ def _get_pictures():
         except requests_exceptions.ConnectionError:
             print(f"Could not connect to {image_url}.")
 
+# 1. DAG: DAG 정의
 dag = DAG(
     dag_id="download_rocket_launches",  # Airflow UI 에 보여질 DAG 이름
     start_date=airflow.utils.dates.days_ago(14),  # Workflow 가 처음 실행될 일시
     schedule_interval=None,
 )
 
-# 1. PythonOperator: get_pictures
+# 2. PythonOperator: get_pictures
 get_pictures = PythonOperator(
     task_id="get_pictures",
     python_callable=_get_pictures,
     dag=dag,
 )
 
-# 2. BashOperator: notify
+# 3. BashOperator: notify
 notify = BashOperator(
     task_id="notify",
     bash_command='echo "There are now $(ls /tmp/images/ | wc -l) images."',
