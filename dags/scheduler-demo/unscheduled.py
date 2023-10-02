@@ -29,8 +29,9 @@ fetch_events = BashOperator(
 def _calculate_stats(input_path, output_path):
     """Calculates event statistics."""
     print("input_path: " + input_path)
-    events = pd.read_json(input_path)                      # 4.
+    events = pd.read_json(input_path, orient='index')                      # 4.
     stats = events.groupby(["date", "user"]).size().reset_index()  # 4. 이벤트를 로드하고 필요한 통계 계산
+    print(stats)
     Path(output_path).parent.mkdir(exist_ok=True)          # 5.
     stats.to_csv(output_path)                 # 5. 출력 디렉토리가 존재하는지 확인하고 CSV로 결과 작성
 

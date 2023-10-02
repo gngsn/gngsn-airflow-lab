@@ -1,9 +1,6 @@
-import csv
 import datetime as dt
 import os
-from pathlib import Path
 
-import pandas as pd
 import requests
 from airflow import DAG
 from airflow.operators.bash import BashOperator
