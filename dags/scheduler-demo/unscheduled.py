@@ -11,7 +11,7 @@ current_dir=os.getcwd()
 
 dag = DAG(
     dag_id="unscheduled-demo",
-    start_date=dt.datetime(2019, 1, 1),   # 1. DAG 시작 날짜 명시
+    start_date=dt.datetime(2023, 10, 1),   # 1. DAG 시작 날짜 명시
     schedule_interval=None,                                # 2. unscheduled 임을 명시적으로 표시
 )
 
