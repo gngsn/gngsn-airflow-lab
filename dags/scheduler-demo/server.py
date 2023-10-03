@@ -5,7 +5,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-response = {"date": datetime.now(), "user": "sun"}
+response = [{"date": datetime.now(), "user": "sun"}, {"date": datetime.now(), "user": "moon"}]
 
 
 @app.route('/events')
