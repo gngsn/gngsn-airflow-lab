@@ -12,4 +12,4 @@ def _calculate_stats(**context):
     stats.to_csv(output_path, index=False)
 
     email_stats(stats, email="user@example.com")
-    
+
