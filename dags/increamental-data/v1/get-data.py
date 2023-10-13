@@ -23,3 +23,4 @@ get_data = BashOperator(
     ),
     dag=dag,
 )
+
