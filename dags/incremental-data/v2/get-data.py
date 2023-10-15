@@ -5,7 +5,7 @@ from airflow.operators.python import PythonOperator
 from urllib import request
 
 dag = DAG(
-    dag_id="stocksense_bashoperator",
+    dag_id="incremental-data-v2",
     start_date=airflow.utils.dates.days_ago(3),
     schedule_interval="@hourly",
 )
