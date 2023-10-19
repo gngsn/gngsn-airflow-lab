@@ -1,11 +1,28 @@
+from datetime import datetime
+
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.engine.url import URL
 
+# from dags.notification.persistence.base import Base, session
+
+from airflow import DAG
+from airflow.decorators import task
 
 Base = declarative_base()
 
+# DB = {
+#     'drivername': 'postgresql',
+#     'host': '127.0.0.1',
+#     'port': '5432',
+#     'username': 'postgres',
+#     'password': 'postgres',
+#     'database': 'ums',
+# }
+#
+# engine = create_engine(URL(**DB), encoding='utf8')
 # dialect+driver://username:password@host:port/database
-engine = create_engine("postgresql://postgres:postgres@localhost/ums")
+engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/ums")
 
 
 class User(Base):
@@ -26,15 +43,16 @@ class User(Base):
 # 정의된 테이블 생성
 Base.metadata.create_all(engine)
 
-def main():
+def run():
     print("Hello World!")
-
-    ed_user = User(name="ed", fullname="Ed Jones", nickname="edsnickname")
 
     Session = sessionmaker(bind=engine)
     session = Session()
-    session.add(ed_user)
 
+
+    ed_user = User(name="ed", fullname="Ed Jones", nickname="edsnickname")
+
+    session.add(ed_user)
     session.add_all(
         [
             User(name="wendy", fullname="Wendy Williams", nickname="windy"),
@@ -51,9 +69,15 @@ def main():
     print(our_user)
     print(ed_user is our_user)
 
-    session.delete()
     session.close()
 
+# airflow dags test "persistence"
+with DAG(dag_id="persistence",
+         start_date=datetime(2022, 1, 1),
+         schedule="0 0 * * *") as dag:
 
-if __name__ == "__main__":
-    main()
+    @task()
+    def taskk():
+        run()
+
+    taskk()
