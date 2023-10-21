@@ -1,28 +1,11 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.engine.url import URL
-
-# from dags.notification.persistence.base import Base, session
+from sqlalchemy import Column, Integer, String
 
 from airflow import DAG
 from airflow.decorators import task
 
-Base = declarative_base()
-
-# DB = {
-#     'drivername': 'postgresql',
-#     'host': '127.0.0.1',
-#     'port': '5432',
-#     'username': 'postgres',
-#     'password': 'postgres',
-#     'database': 'ums',
-# }
-#
-# engine = create_engine(URL(**DB), encoding='utf8')
-# dialect+driver://username:password@host:port/database
-engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/ums")
+from dags.notification.persistence.base import Base, get_session
 
 
 class User(Base):
@@ -40,16 +23,11 @@ class User(Base):
             self.nickname,
         )
 
-# 정의된 테이블 생성
-Base.metadata.create_all(engine)
 
 def run():
     print("Hello World!")
 
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-
+    session = get_session()
     ed_user = User(name="ed", fullname="Ed Jones", nickname="edsnickname")
 
     session.add(ed_user)

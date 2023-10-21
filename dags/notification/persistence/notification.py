@@ -1,14 +1,32 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime
+from datetime import datetime
 
-from dags.notification.persistence.base import Base
+from peewee import *
+
+db = SqliteDatabase('people.db')
 
 
-class Notification(Base):
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+
+class User(BaseModel):
+    username = CharField(unique=True)
+
+
+class Notification(BaseModel):
     __tablename__ = "notification"
 
-    id = Column(Integer, primary_key=True)
-    schedule = Column(String)
-    body = Column(JSON)
-    target = Column(String)
-    update_at = Column(DateTime)
+    id = BigAutoField() #  `primary_key=True` is implied. Event.event_id will be auto-incrementing PK.
+    schedule = TextField()
+    message = TextField()
+    target = TextField()
+    update_at = TextField(default=datetime.now)
 
+
+Notification.create(
+    schedule="",
+    message="",
+    target="",
+    update_at="",
+)
