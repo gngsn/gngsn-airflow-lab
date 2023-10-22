@@ -1,16 +1,8 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from peewee import Model, PostgresqlDatabase
 
-Base = declarative_base()
-# dialect+driver://username:password@host:port/database
-engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost/ums?charset=utf8mb4")
+DB = PostgresqlDatabase('ums', user='postgres', host='127.0.0.1', password='postgres')
 
-Session = sessionmaker(bind=engine)
-session = Session()
 
-# 정의된 테이블 생성
-Base.metadata.create_all(engine)
-
-def get_session():
-    Session = sessionmaker(bind=engine)
-    return Session()
+class BaseModel(Model):
+    class Meta:
+        database = DB
