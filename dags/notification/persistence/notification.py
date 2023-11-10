@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from peewee import *
+from playhouse.cockroachdb import JSONField
 
 from notification.persistence.base import BaseModel
 
