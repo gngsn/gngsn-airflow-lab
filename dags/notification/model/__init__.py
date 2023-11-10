@@ -1,0 +1,1 @@
+from notification.model.message import Message
