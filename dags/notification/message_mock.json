@@ -1,9 +1,8 @@
 [
   {
     "id": 0,
-    "schedule": [
-      "* * * * MON"
-    ],
+    "schedule": "* 9 * * MON",
+    "template_id": "UMSV10001",
     "condition": {
       "sensor": "no_holiday"
     },
@@ -11,23 +10,35 @@
       "title": "이번 주 회의 건 수",
       "message": "이번 주 {task_count}개의 회의가 예정되어 있어요."
     },
-    "target": {
-      "sql": "select user.email from user as u, notification as n where n.user_id = u.id"
-    },
     "argument": {
-        "task_count": ""
-    }
+      "task_count": ""
+    },
+    "argument_valid": [
+      "task_count"
+    ]
   },
   {
     "id": 1,
-    "schedule": [
-    ],
-    "alert": {
-      "title": "테스트",
-      "message": "10 분마다 실행되는 알림이에요."
-    },
+    "schedule": "* * * * *",
+    "template_id": "UMSV10002",
     "target": {
       "equal": "@gngsn"
-    }
+    },
+    "argument_valid": [
+      "owner",
+      "time"
+    ]
+  },
+  {
+    "id": 2,
+    "schedule": "30 * * * *",
+    "template_id": "UMSV10003",
+    "target": {
+      "equal": "gngsn"
+    },
+    "argument_valid": [
+      "meeting_name",
+      "location"
+    ]
   }
 ]
