@@ -3,19 +3,12 @@ import pathlib
 import airflow
 import requests
 import requests.exceptions as requests_exceptions
-from airflow import DAG
+from airflow.decorators import dag, task
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 
-# 1. DAG: DAG 정의
-dag = DAG(
-    dag_id="download_rocket_launches",  # Airflow UI 에 보여질 DAG 이름
-    start_date=airflow.utils.dates.days_ago(14),  # Workflow 가 처음 실행될 일시
-    schedule_interval=None,
-)
-
-
+@task
 def _get_pictures():
     pathlib.Path("/tmp/images").mkdir(parents=True, exist_ok=True)
 
@@ -36,18 +29,25 @@ def _get_pictures():
             print(f"Could not connect to {image_url}.")
 
 
-# 2. PythonOperator: get_pictures
-get_pictures = PythonOperator(
-    task_id="get_pictures",
-    python_callable=_get_pictures,
-    dag=dag,
+# 1. DAG: DAG 정의
+@dag(
+    dag_id="download_rocket_launches",  # Airflow UI 에 보여질 DAG 이름
+    start_date=airflow.utils.dates.days_ago(14),  # Workflow 가 처음 실행될 일시
+    schedule_interval=None,
 )
+def download_rocket_launches():
+    # 2. PythonOperator: get_pictures
+    get_pictures = PythonOperator(
+        task_id="get_pictures",
+        python_callable=_get_pictures,
+        dag=download_rocket_launches(),
+    )
 
-# 3. BashOperator: notify
-notify = BashOperator(
-    task_id="notify",
-    bash_command='echo "There are now $(ls /tmp/images/ | wc -l) images."',
-    dag=dag,
-)
+    # 3. BashOperator: notify
+    notify = BashOperator(
+        task_id="notify",
+        bash_command='echo "There are now $(ls /tmp/images/ | wc -l) images."',
+        dag=download_rocket_launches(),
+    )
 
-get_pictures >> notify
+    get_pictures >> notify
