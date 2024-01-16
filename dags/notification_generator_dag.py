@@ -1,23 +1,24 @@
 import json
 from datetime import datetime
 
-from croniter import croniter
 from airflow import DAG
 from airflow.decorators import task
+from croniter import croniter
 
-from notification.commander import SQLCommand
-from notification.persistence.articles import Articles
+from notification.monitor.watcher import Watcher
 from notification.persistence.base import DB
 from notification.persistence.notification import Notification
 from notification.persistence.users import Users
+
+# from notification.persistence.articles import Articles
 
 with DAG(dag_id="notification_generator",
          start_date=datetime(2022, 1, 1),
          ) as dag:
     @task
     def generate_data():
-        DB.drop_tables([Users, Notification, Articles])
-        DB.create_tables([Users, Notification, Articles])
+        DB.drop_tables([Users, Notification])
+        DB.create_tables([Users, Notification])
 
         Notification.create(
             schedule='* * * * MON',
@@ -52,8 +53,8 @@ with DAG(dag_id="notification_generator",
         Users.create(username="etienne", email="etienne@email.com")
         Users.create(username="tai", email="tai@email.com")
 
-        Articles.create(author=0, content="<html><body>HI!!</body></html>", created_at=datetime.now())
-        Articles.create(author=2, content="<html><body>Hello ~!</body></html>", created_at=datetime.now())
+        # Articles.create(author=0, content="<html><body>HI!!</body></html>", created_at=datetime.now())
+        # Articles.create(author=2, content="<html><body>Hello ~!</body></html>", created_at=datetime.now())
 
         print('Notification : ', Notification.select())
         print('Users : ', Users.select())
@@ -74,7 +75,8 @@ with DAG(dag_id="notification_generator",
                 print(parsed_args, "\n\n\n\n")
 
                 if parsed_args['type'] == "sql":
-                    args[parsed_args['name']] = SQLCommand().execute(parsed_args['value'])
+                    # args[parsed_args['name']] = SQLCommand().execute(parsed_args['value'])
+                    Watcher.not_implement_yet_warning()
                 else:
                     args[parsed_args['name']] = parsed_args.value
 
@@ -82,7 +84,6 @@ with DAG(dag_id="notification_generator",
 
             # ② Get schedule and judge whether it have to run or not
             schedule_condition = json.loads(template.schedule_condition)
-
 
             parsed_schedule = json.loads(template.schedule)
             next_schedule = croniter(parsed_schedule, datetime.now()).get_next(datetime)
