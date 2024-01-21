@@ -26,7 +26,7 @@ class Predicator(Command):
 
         for s in split:
             if self.is_command(s):
-                # update(pre_op, num)
+                update(pre_op, num)
             elif s in '+-*/':
                 # num = 10 * num + int(s)
 
