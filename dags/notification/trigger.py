@@ -8,11 +8,11 @@ from airflow.operators.python import PythonOperator
     schedule_interval="@daily",
 )
 def print_context():
-    def _print_context(**kwargs):
-        print("\n\n\n\n\nprint:: ", kwargs['dag'])
+    def _print_context(**context):
+        print("\n\n\n\n\nprint:: ", context)
 
     do = PythonOperator(
-        task_id="print_context",
+        task_id="_print_context",
         python_callable=_print_context,
     )
 

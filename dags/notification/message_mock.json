@@ -8,10 +8,10 @@
     },
     "alert": {
       "title": "이번 주 회의 건 수",
-      "message": "이번 주 {task_count}개의 회의가 예정되어 있어요."
+      "message": "이번 주 {$task_count$}개의 회의가 예정되어 있어요."
     },
     "argument": {
-      "task_count": ""
+      "task_count": "select count(*) as task_count from TODO ..."
     },
     "argument_valid": [
       "task_count"
