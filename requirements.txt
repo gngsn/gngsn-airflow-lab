@@ -109,7 +109,7 @@ prometheus-client==0.17.1
 prompt-toolkit==3.0.39
 protobuf==4.21.12
 psutil==5.9.5
-psycopg2-binary==2.9.9
+psycopg3==3.1.17
 pycparser==2.21
 pydantic==2.4.2
 pydantic_core==2.10.1

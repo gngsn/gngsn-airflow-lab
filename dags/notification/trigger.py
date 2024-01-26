@@ -1,22 +1,44 @@
+import logging
+
 import airflow.utils.dates
+import pendulum
+from airflow.decorators import task
 from airflow.models.dag import dag
-from airflow.operators.python import PythonOperator
 
 
 @dag(
-    start_date=airflow.utils.dates.days_ago(3),
-    schedule_interval="@daily",
+    dag_id="notification_batch",
+    start_date=airflow.utils.dates.days_ago(1),
+    schedule_interval="@hourly",
 )
-def print_context():
-    def _print_context(**context):
-        print("\n\n\n\n\nprint:: ", context)
+def notification_batch_dag():
+    @task
+    def start_batch(**context):
+        # run_id = context
+        logging.info(f"start {context['dag_run'].dag_id}")
+        execution_id = f"{context['dag_run'].dag_id}-{pendulum.now().to_iso8601_string()}"
 
-    do = PythonOperator(
-        task_id="_print_context",
-        python_callable=_print_context,
-    )
+        return execution_id
 
-    do
+    @task
+    def generator():
+        f = open("/Users/gyeongsun/git/gngsn-airflow-lab/dags/notification/message_mock.json", "r")
+        print(f.read())
+
+        return f.read()
+
+    @task
+    def scheduler(f):
+        print(f)
+
+    @task
+    def end_batch(execution_id):
+        logging.info(f"end ${execution_id}")
+
+    execution_id = start_batch()
+    f = generator()
+    scheduler(f)
+    end_batch(execution_id)
 
 
-print_context()
+notification_batch_dag()
