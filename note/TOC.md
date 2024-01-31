@@ -2,30 +2,32 @@ Airflow TODO List
 
 _-- ToC --_
 
-Preface
+### Preface
 
 ✔️ Conventions
 ✔️ Configuration
 
-Basis Knowledge
+### Basis Knowledge
 
 ✔️ Airflow Architecture
 ✔️ Apache Airflow 설치
-✔️ 첫번째 DAG 만들어보기
+✔️ 첫 DAG 생성
 ✔️ User Interface
 
-Intermediate Knowledge
+### Intermediate Knowledge
+
 ✔️ Provider
 ✔️ Sensor
 ✔️ Hook
 ✔️ Schedule(ft. Data-aware Scheduling)
 ✔️ Flower
 
-Advanced Knowledge
+### Advanced Knowledge
+
 ✔️ Queue
 ✔️ Task Group
 ✔️ XCom
 ✔️ Branch Operator
 ✔️ Trigger Rule
 
-Appendix - Tips
+### Appendix - Tips
