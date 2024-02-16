@@ -1,103 +1,100 @@
 {
-
-    "hostname":"0.0.0.0",
-    "port":8000,
-    "responses":[
+  "hostname": "0.0.0.0",
+  "port": 8000,
+  "responses": [
+    {
+      "method": "GET",
+      "path": "/",
+      "responseCode": 200,
+      "body": "<html><head></head><title>Simple Mock Server test</title><body><h1>GET! It works!</h1></body></html>",
+      "headers": [
         {
-            "method":"GET",
-            "path":"/",
-            "responseCode":200,
-            "body":"<html><head></head><title>Simple Mock Server test</title><body><h1>GET! It works!</h1></body></html>",
-            "headers":[
-                {
-                    "Content-Type":"text/html; charset=UTF-8"
-                }
-            ]
-        },
-        {
-            "method":"GET",
-            "path":"/cors-test",
-            "body":"{ \"type\":\"GET\", \"status\": \"OK\", \"message\": \"CORS worked!\" }",
-            "responseCode":200,
-            "headers":[
-                {
-                   "Access-Control-Allow-Origin":"*"
-                },
-                {
-                    "Content-Type":"text/html; charset=UTF-8"
-                }
-            ]
-        },
-
-        {
-            "method":"GET",
-            "path":"/status",
-            "responseCode":200,
-            "body":"{ \"type\":\"GET\", \"status\": \"OK\" }",
-            "headers":[
-                {
-                    "Content-Type":"application/json"
-                }
-            ]
-        },
-        {
-            "method":"GET",
-            "path":"/redirect",
-            "responseCode":302,
-            "body":"{\"type\":\"redirect\"}",
-            "headers":[
-                {
-                    "Content-Type":"application/json"
-                },
-                {
-                    "location":"https://github.com/jonathadv/simple-mock-server"
-                }
-            ]
-        },
-        {
-            "method":"GET",
-            "path":"/attachment",
-            "responseCode":200,
-            "body":"@file://./LICENSE.txt",
-            "headers":[
-                {
-                    "Content-Disposition": "attachment; filename=\"LICENSE.txt\""
-                }
-            ]
-        },
-        {
-            "method":"POST",
-            "path":"/add",
-            "responseCode":201,
-            "body":"{ \"type\":\"POST\", \"status\": \"Created!\" }",
-            "headers":[
-                {
-                    "Content-Type":"application/json"
-                }
-            ]
-        },
-        {
-            "method":"PUT",
-            "path":"/update",
-            "responseCode":200,
-            "body":"{ \"type\":\"PUT\", \"status\": \"updated!\" }",
-            "headers":[
-                {
-                    "Content-Type":"application/json"
-                }
-            ]
-        },
-        {
-            "method":"DELETE",
-            "path":"/remove",
-            "responseCode":200,
-            "body":"{ \"type\":\"DELETE\", \"status\": \"Removed!\" }",
-            "headers":[
-                {
-                    "Content-Type":"application/json"
-                }
-            ]
+          "Content-Type": "text/html; charset=UTF-8"
         }
-    ]
-
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/cors-test",
+      "body": "{ \"type\":\"GET\", \"status\": \"OK\", \"message\": \"CORS worked!\" }",
+      "responseCode": 200,
+      "headers": [
+        {
+          "Access-Control-Allow-Origin": "*"
+        },
+        {
+          "Content-Type": "text/html; charset=UTF-8"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "responseCode": 200,
+      "body": "{ \"type\":\"GET\", \"status\": \"OK\" }",
+      "headers": [
+        {
+          "Content-Type": "application/json"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/redirect",
+      "responseCode": 302,
+      "body": "{\"type\":\"redirect\"}",
+      "headers": [
+        {
+          "Content-Type": "application/json"
+        },
+        {
+          "location": "https://github.com/jonathadv/simple-mock-server"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/attachment",
+      "responseCode": 200,
+      "body": "@file://./LICENSE.txt",
+      "headers": [
+        {
+          "Content-Disposition": "attachment; filename=\"LICENSE.txt\""
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/add",
+      "responseCode": 201,
+      "body": "{ \"type\":\"POST\", \"status\": \"Created!\" }",
+      "headers": [
+        {
+          "Content-Type": "application/json"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/update",
+      "responseCode": 200,
+      "body": "{ \"type\":\"PUT\", \"status\": \"updated!\" }",
+      "headers": [
+        {
+          "Content-Type": "application/json"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/remove",
+      "responseCode": 200,
+      "body": "{ \"type\":\"DELETE\", \"status\": \"Removed!\" }",
+      "headers": [
+        {
+          "Content-Type": "application/json"
+        }
+      ]
+    }
+  ]
 }

@@ -7,7 +7,7 @@ _-- ToC --_
 ✔️ Conventions
 ✔️ Configuration
 
-### Basis Knowledge
+### 1. Basis Knowledge
 
 ✔️ Airflow Architecture
 ✔️ Apache Airflow 설치
