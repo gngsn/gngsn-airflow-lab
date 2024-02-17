@@ -1,6 +1,5 @@
-import logging
-
 import airflow.utils.dates
+import logging
 import pendulum
 from airflow.decorators import task
 from airflow.models.dag import dag
@@ -16,9 +15,7 @@ def notification_batch_dag():
     def start_batch(**context):
         # run_id = context
         logging.info(f"start {context['dag_run'].dag_id}")
-        execution_id = f"{context['dag_run'].dag_id}-{pendulum.now().to_iso8601_string()}"
-
-        return execution_id
+        return f"{context['dag_run'].dag_id}-{pendulum.now().to_iso8601_string()}"
 
     @task
     def generator():
@@ -32,12 +29,13 @@ def notification_batch_dag():
         print(f)
 
     @task
-    def end_batch(execution_id):
-        logging.info(f"end ${execution_id}")
+    def end_batch(exec_id):
+        logging.info(f"end ${exec_id}")
 
     execution_id = start_batch()
-    f = generator()
-    scheduler(f)
+
+    scheduler(generator())
+
     end_batch(execution_id)
 
 
