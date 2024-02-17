@@ -1,4 +1,5 @@
 from notification.persistence.base import BaseModel
+from peewee import *
 
 
 class NotificationJob(BaseModel):

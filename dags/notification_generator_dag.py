@@ -12,25 +12,27 @@ from notification.persistence.users import Users
 
 # from notification.persistence.articles import Articles
 
-with DAG(dag_id="notification_generator",
-         start_date=datetime(2022, 1, 1),
-         ) as dag:
+with DAG(
+    dag_id="notification_generator",
+    start_date=datetime(2022, 1, 1),
+) as dag:
+
     @task
     def generate_data():
         DB.drop_tables([Users, Notification])
         DB.create_tables([Users, Notification])
 
         Notification.create(
-            schedule='* * * * MON',
-            schedule_condition='*',
+            schedule="* * * * MON",
+            schedule_condition="*",
             message='{"title": "Weekly Newsletter", "content": "오늘은 월요일입니다. {{username}}님, 출근하세요! ^~^"}',
             target="SELECT u.email as target FROM users u JOIN subscribe s ON s.id = n.user_id",
             active=True,
         )
 
         Notification.create(
-            schedule='*',
-            schedule_condition='{{article.created_at}} == {{now}}',
+            schedule="*",
+            schedule_condition="{{article.created_at}} == {{now}}",
             message='{"title": "New Newsletter", "content": "새로운 아티클이 발간되었어요!"}',
             target="SELECT u.email as target FROM users u JOIN subscribe s ON s.id = n.user_id",
             active=True,
@@ -56,52 +58,50 @@ with DAG(dag_id="notification_generator",
         # Articles.create(author=0, content="<html><body>HI!!</body></html>", created_at=datetime.now())
         # Articles.create(author=2, content="<html><body>Hello ~!</body></html>", created_at=datetime.now())
 
-        print('Notification : ', Notification.select())
-        print('Users : ', Users.select())
-
+        print("Notification : ", Notification.select())
+        print("Users : ", Users.select())
 
     @task
     def make_message():
         """
-            make message from template
+        make message from template
         """
         args = {}
 
         def make_messages(template: Notification):
-            print('## STEP 2 ##\n\n\n\n\n')
+            print("## STEP 2 ##\n\n\n\n\n")
             # ① Get args and then make extra args
             if template.args is not None:
                 parsed_args = json.loads(template.args)
                 print(parsed_args, "\n\n\n\n")
 
-                if parsed_args['type'] == "sql":
+                if parsed_args["type"] == "sql":
                     # args[parsed_args['name']] = SQLCommand().execute(parsed_args['value'])
                     Watcher.not_implement_yet_warning()
                 else:
-                    args[parsed_args['name']] = parsed_args.value
+                    args[parsed_args["name"]] = parsed_args.value
 
-                print('args : ', args)
+                print("args : ", args)
 
             # ② Get schedule and judge whether it have to run or not
             schedule_condition = json.loads(template.schedule_condition)
 
             parsed_schedule = json.loads(template.schedule)
             next_schedule = croniter(parsed_schedule, datetime.now()).get_next(datetime)
-            print('parsed_schedule : ', parsed_schedule)
-            print('next_schedule : ', next_schedule)
+            print("parsed_schedule : ", parsed_schedule)
+            print("next_schedule : ", next_schedule)
 
             # ③ Get targets and then make common args
 
             # ④ Make messages with the args got the above
 
-        print('## STEP 1 ##\n\n\n\n\n')
+        print("## STEP 1 ##\n\n\n\n\n")
         # ① Get all active notification template
         templates = Notification.select().where(Notification.active == True)
 
-        print('templates : ', templates)
+        print("templates : ", templates)
         for t in templates:
             print(t.args)
             make_messages(t)
-
 
     generate_data() >> make_message()
